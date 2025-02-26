@@ -1,0 +1,11 @@
+[package]
+name = "blackjack_wasm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasm-bindgen = "0.2"
+sp1 = "0.1"
+
+[lib]
+crate-type = ["cdylib"]

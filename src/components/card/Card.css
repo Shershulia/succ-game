@@ -1,0 +1,49 @@
+.card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 120px;
+    border-radius: 10px;
+    border: 2px solid black;
+    background-color: white;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    margin: 5px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .card-value {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  
+  .card-suit {
+    width: auto;
+    height: auto;
+    max-width: 40px; 
+    max-height: 40px;
+    object-fit: contain;
+  }
+  
+  .card.red {
+    color: red;
+  }
+  
+  .card.black {
+    color: black;
+  }
+  
+  .background {
+    /* background-image: url("/images/dealer.jpg");  */
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;  
+    height: 100vh; 
+  }
+  

@@ -1,6 +1,11 @@
 .App {
   text-align: center;
 }
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
 .App-logo {
   height: 40vmin;
@@ -27,7 +32,124 @@
 .App-link {
   color: #61dafb;
 }
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
+.header {
+  margin: 0;
+  color: #fe2bcc;
+  background-color: black;
+  padding: 10px;
+  animation: pulse 1.5s infinite;
+}
+.header-container{
+  background-color: #000;
+  height: 70px;
+  margin-bottom: 20px;
+}
+.button-container-upper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.stand-button {
+  background-color: #af1d8d !important; 
+}
+.background{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+.stand-button:hover {
+  background-color: #781461 !important;
+}
+
+.hit-button {
+  background-color: #fe2bcc !important; 
+}
+
+.hit-button:hover {
+  background-color: #ed27bf!important; 
+}
+.balance-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.balance-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fe2bcc;
+}
+
+.balance-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s ease-in-out, transform 0.2s;
+}
+
+.decrease-button {
+  background-color: #dc3545; /* Красный */
+  color: white;
+}
+
+.decrease-button:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+.increase-button {
+  background-color: #28a745; /* Зеленый */
+  color: white;
+}
+.balance-wrapper {
+  z-index: 99;
+  position: absolute;
+  top: 7%;
+  right: 20%;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.increase-button:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+}
+
+.button-text {
+  margin: 0;
+  font-weight: bold;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +158,74 @@
     transform: rotate(360deg);
   }
 }
+.overlay {
+  position: fixed;
+  z-index: 98;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.start-button {
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-top: 20px;
+  transition: 0.3s;
+}
+
+.start-button.start {
+  background: #4CAF50; /* Зеленая */
+}
+
+.start-button.restart {
+  background: #FFC107; /* Желтая */
+}
+.button-img{
+  width: 30px;
+  height: 30px;
+}
+.button-text{
+  color: black;
+}
+.start-button:hover {
+  opacity: 0.8;
+}
+.game-button {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-top: 20px;
+  transition: 0.3s;
+  width: 200px;
+  background: #ff9800; 
+}
+
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
