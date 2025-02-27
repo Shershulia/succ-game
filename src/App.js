@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Card } from "./components";
-import { checkDealer } from "./blackjack";
-import { initWasm } from "./wasm-loader";
 
 const suits = ["crab_black", "crab_red", "succ_red", "succ_black"];
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -54,7 +52,6 @@ function App() {
 
   useEffect(() => {
     setDeck(createDeck());
-    initWasm();
   }, []);
 
   const dealInitialCards = () => {
@@ -132,9 +129,6 @@ function App() {
     // Завершаем игру после того, как дилер сделал ход
     setGameOver(true);
     setShowOverlay(true);
-
-    const isValid = checkDealer(dealerHand);
-    alert(isValid ? "Dealer followed rules!" : "Cheating detected!");
 };
 
   
