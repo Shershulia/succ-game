@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Card } from "./components";
-
+import GlitchText from 'react-glitch-effect/core/GlitchText';
+import Sound from "react-sound";
 const suits = ["crab_black", "crab_red", "succ_red", "succ_black"];
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
@@ -49,12 +50,18 @@ function App() {
 
   const [balance, setBalance] = useState(500);
   const [bet, setBet] = useState(50);
+  const [isSoundPlaying, setIsSoundPlaying] = useState(false);
+  const [isSoundDeck, setIsSoundDeck] = useState(false);
+  const [isSoundCard, setIsSoundCard] = useState(false);
+
 
   useEffect(() => {
     setDeck(createDeck());
   }, []);
 
   const dealInitialCards = () => {
+    setIsSoundPlaying(true);
+    setIsSoundDeck(true)
     setBalance(balance - bet);
     setGameOver(false);
     setIsHit(false);
@@ -64,10 +71,15 @@ function App() {
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
     setDeck(newDeck);
+    setTimeout(()=>{
+      setIsSoundDeck(false)
+    },500)
   };
+  
 
   const hit = () => {
     setIsHit(true);
+    setIsSoundCard(true)
     if (!gameOver && deck.length > 0) {
       const delay =  500; // 500 мс
       let newDeck = [...deck];
@@ -88,9 +100,11 @@ function App() {
           }
           , delay);
         }
+        setTimeout(() => {
+          setIsSoundCard(false);
+        }, 500);
       };
       drawCard();
-  
     }
   };
   useEffect(() => {
@@ -117,16 +131,17 @@ function App() {
     let newDeck = [...deck];
     let newDealerHand = [...dealerHand];
     let dealerScore = calculateScore(newDealerHand);
-    
+    setIsSoundCard(true)
     // Дилер берет только одну карту, если у него меньше 17 после двух карт
-    if (dealerScore < 17) { 
+    while (dealerScore < 17) { 
         newDealerHand.push(newDeck.pop());
         setDealerHand([...newDealerHand]);
         setDeck(newDeck);
         dealerScore = calculateScore(newDealerHand);
     }
-
-    // Завершаем игру после того, как дилер сделал ход
+    setTimeout(() => {
+      setIsSoundCard(false);
+    }, 500);
     setGameOver(true);
     setShowOverlay(true);
 };
@@ -139,9 +154,30 @@ function App() {
 
   return (
     <div className="App">
+      <Sound
+        url="/background.mp3"
+        playStatus={isSoundPlaying ? Sound.status.PLAYING : Sound.status.STOPPED}
+        autoLoad={true}
+        loop={true}
+        volume={30}
+      />
+      <Sound
+        url="/deck.mp3"
+        playStatus={isSoundDeck ? Sound.status.PLAYING : Sound.status.STOPPED}
+        autoLoad={true}
+        loop={true}
+        volume={50}
+      />
+      <Sound
+        url="/card.mp3"
+        playStatus={isSoundCard ? Sound.status.PLAYING : Sound.status.STOPPED}
+        autoLoad={true}
+        volume={50}
+      />
+      <div className="glitch-overlay"></div> 
       {showOverlay && (
         <div className="overlay">
-          <h1 className="result-text">
+          <GlitchText component='h1' disabled={false} className="result-text">
             {playerHand.length === 0 ? "Welcome to Succinct Blackjack!" :
               calculateScore(playerHand) === 21 && calculateScore(dealerHand) !== 21 ? "Player Wins!" :
               calculateScore(playerHand) > 21 ? "Player Busts! Dealer Wins!" :
@@ -149,12 +185,15 @@ function App() {
               calculateScore(playerHand) === calculateScore(dealerHand) && calculateScore(playerHand) < 21 ? "It's a Tie!" :
               calculateScore(playerHand) > calculateScore(dealerHand) && calculateScore(dealerHand) <= 16 ? "Player Wins!" :
               "Dealer Wins!"}
-          </h1>
+          </GlitchText>
 
           <div className="balance-container">
               
               <button className="balance-button decrease-button" onClick={() => setBet(Math.max(bet - 10, 10))}>-</button>
-              <p className="balance-text">Bet: ${bet}</p>
+              <div className="star-container">
+                <p className="balance-text">Bet: {bet}</p>
+                <img src={"/images/star.png"} className="star" />
+              </div>
               <button className="balance-button increase-button" onClick={() => setBet(Math.min(bet + 10, balance))}>+</button>
             </div>
             <button className={buttonClass} onClick={dealInitialCards}>
@@ -163,24 +202,25 @@ function App() {
         </div>
       )}
       <div className="balance-wrapper">
-        <p className="balance-text">💰 Balance: ${balance}</p>
+        <p className="balance-text"> Balance: {balance}</p>
+        <img src={"/images/star.png"} className="star" />
       </div>
       <div className="header-container">
-        <h1 className="header">Succinct Blackjack</h1>
+        <GlitchText component='h1' disabled={false} className="header">Succinct Blackjack</GlitchText>
       </div>
       {playerHand.length !== 0 && (
         <div className="background">
-          <h2>Dealer: {calculateScore(dealerHand)}</h2>
+          <h2 className="score">Dealer: {calculateScore(dealerHand)}</h2>
           <div>
             {dealerHand.map((card, index) => (
-              <Card key={index} value={card.value} suit={card.suit} index={index} />
+              <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={true} />
             ))}
           </div>
-          <div> </div>
-          <h2>Player: {calculateScore(playerHand)}</h2>
+          <img src={"/images/deck.png"} className="deck" />
+          <h2 className="score">Player: {calculateScore(playerHand)}</h2>
           <div>
             {playerHand.map((card, index) => (
-              <Card key={index} value={card.value} suit={card.suit} index={index} />
+              <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={false} />
             ))}
           </div>
           <div className="button-container-upper"> 
