@@ -1,2 +1,3 @@
 import Card from "./card/Card";
-export { Card };
+import CardValuePanel from "./card_value/CardValuePanel";
+export { Card, CardValuePanel };

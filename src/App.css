@@ -30,7 +30,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   pointer-events: none;
   z-index: 1;
   mix-blend-mode: difference;
@@ -143,6 +143,12 @@ body, html {
   justify-content: center;
   align-items: center;
 }
+.background-panel{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
 .stand-button {
   border: #000;
   background-color: #af1d8d !important; 
@@ -162,13 +168,15 @@ body, html {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   z-index: -1;
 }
 .score{
   background-color: white;
   color: #000;
+  width: 200px;
+  text-align: center;
   padding: 10px;
   border-radius: 10px;
 }
@@ -227,10 +235,10 @@ body, html {
 .balance-wrapper {
   position: fixed;
   top: 7%;
-  right: 10%;
+  right: 0%;
   padding: 8px 15px;
   background: rgba(0, 0, 0, 0.8);
-  border-radius: 10px;
+  border-radius: 0px 0px 10px 10px;
   color: white;
   font-weight: bold;
   display: flex;

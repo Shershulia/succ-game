@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Card } from "./components";
+import { Card, CardValuePanel } from "./components";
 import GlitchText from 'react-glitch-effect/core/GlitchText';
 import Sound from "react-sound";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
@@ -123,17 +123,22 @@ function App() {
     if (gameOver) {
       const playerScore = calculateScore(playerHand);
       const dealerScore = calculateScore(dealerHand);
-      if (
-        playerScore === 21 && dealerScore !== 21 || 
-        dealerScore > 21 || 
-        (playerScore > dealerScore && dealerScore <= 16)
-      ) {
-        setBalance(balance + bet * 2);
-      } else if (playerScore === dealerScore) {
-        setBalance(balance + bet);
-      }else if (playerScore > 21) {
-        setBalance(balance-bet)
-      }
+  
+      setBalance(prevBalance => {
+        if (playerScore>21){
+          return prevBalance; // Проигрыш
+        }
+        else if (
+          (playerScore === 21 && dealerScore !== 21) || 
+          (dealerScore > 21) || 
+          (playerScore > dealerScore)
+        ) {
+          return prevBalance + bet * 2; // Выигрыш
+        } else if (playerScore === dealerScore) {
+          return prevBalance + bet; // Возврат ставки при ничьей
+        }
+        return prevBalance;
+      });
     }
   }, [gameOver]);
   
@@ -168,6 +173,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className="glitch-overlay"></div> 
       <Sound
         url="/background.mp3"
         playStatus={isSoundPlaying ? Sound.status.PLAYING : Sound.status.STOPPED}
@@ -188,7 +194,6 @@ function App() {
         autoLoad={true}
         volume={50}
       />
-      <div className="glitch-overlay"></div> 
       {showOverlay && (
         <div className="overlay">
           <GlitchText component='h1' disabled={false} className="result-text">
@@ -197,7 +202,7 @@ function App() {
               calculateScore(playerHand) > 21 ? "Player Busts! Dealer Wins!" :
               calculateScore(dealerHand) > 21 ? "Player Wins!" :
               calculateScore(playerHand) === calculateScore(dealerHand) && calculateScore(playerHand) < 21 ? "It's a Tie!" :
-              calculateScore(playerHand) > calculateScore(dealerHand) && calculateScore(dealerHand) <= 16 ? "Player Wins!" :
+              calculateScore(playerHand) > calculateScore(dealerHand) ? "Player Wins!" :
               "Dealer Wins!"}
           </GlitchText>
 
@@ -235,47 +240,42 @@ function App() {
       <div className="header-container">
         <GlitchText component='h1' disabled={false} className="header">Succinct Blackjack</GlitchText>
       </div>
-      {playerHand.length !== 0 && (
-        <div className="background">
-          <h2 className="score">Dealer: {calculateScore(dealerHand)}</h2>
-          <div>
-            {dealerHand.map((card, index) => (
-              <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={true} />
-            ))}
-          </div>
-          <img src={"/images/deck.png"} className="deck" />
-          <h2 className="score">Player: {calculateScore(playerHand)}</h2>
-          <div>
-            {playerHand.map((card, index) => (
-              <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={false} />
-            ))}
-          </div>
-          <div className="button-container-upper"> 
-            {!gameOver && (
-              <div className="button-container">
-                <button className="game-button hit-button" onClick={hit} disabled={gameOver}>
-                  <p className="button-text">Hit</p>
-                  <img src="/images/hand.svg" className="button-img" />
-                </button>
-
-                <button className="game-button stand-button" onClick={stand} disabled={gameOver}> 
-                  <p className="button-text">Stand</p>
-                  <img src="/images/hold.svg" className="button-img" />
-                </button>
-
-
+          <div className="background">
+        {playerHand.length !== 0 && (
+            <div className="main">
+              <h2 className="score">Dealer: {calculateScore(dealerHand)}</h2>
+              <div>
+                {dealerHand.map((card, index) => (
+                  <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={true} />
+                ))}
               </div>
-            )}
+              <img src={"/images/deck.png"} className="deck" />
+              <h2 className="score">Player: {calculateScore(playerHand)}</h2>
+              <div>
+                {playerHand.map((card, index) => (
+                  <Card key={index} value={card.value} suit={card.suit} index={index} isDealer={false} />
+                ))}
+              </div>
+              <div className="button-container-upper"> 
+                  <div className="button-container">
+                    <button className="game-button hit-button" onClick={hit} disabled={gameOver}>
+                      <p className="button-text">Hit</p>
+                      <img src="/images/hand.svg" className="button-img" />
+                    </button>
 
-            {/* { !isHit &&
-              (
-                <button className="game-button" onClick={dealInitialCards} disabled={gameOver}>Restart</button>
-              )
-            } */}
-          </div>
+                    <button className="game-button stand-button" onClick={stand} disabled={gameOver}> 
+                      <p className="button-text">Stand</p>
+                      <img src="/images/hold.svg" className="button-img" />
+                    </button>
+
+
+                  </div>
+                </div>
+            </div>
+          )}
+            <CardValuePanel></CardValuePanel>
+
         </div>
-      )}
-
     </div>
   );
 }
