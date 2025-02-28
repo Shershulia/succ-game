@@ -3,6 +3,8 @@ import "./App.css";
 import { Card } from "./components";
 import GlitchText from 'react-glitch-effect/core/GlitchText';
 import Sound from "react-sound";
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+
 const suits = ["crab_black", "crab_red", "succ_red", "succ_black"];
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
@@ -54,26 +56,36 @@ function App() {
   const [isSoundDeck, setIsSoundDeck] = useState(false);
   const [isSoundCard, setIsSoundCard] = useState(false);
 
-
-  useEffect(() => {
-    setDeck(createDeck());
-  }, []);
-
   const dealInitialCards = () => {
+    if (bet > balance || balance === 0) {
+      toast.warn("Not enough funds to place a bet! Top up your balance or restart page", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        style: { width: "250px", fontSize: "14px", padding: "10px" }
+        });
+      return;
+    }
+    const newDeck = createDeck(); // Создание новой колоды при каждой раздаче
+    setDeck(newDeck);
     setIsSoundPlaying(true);
-    setIsSoundDeck(true)
+    setIsSoundDeck(true);
     setBalance(balance - bet);
     setGameOver(false);
     setIsHit(false);
     setIsStand(false);
     setShowOverlay(false);
-    let newDeck = [...deck];
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
-    setDeck(newDeck);
-    setTimeout(()=>{
-      setIsSoundDeck(false)
-    },500)
+    setTimeout(() => {
+      setIsSoundDeck(false);
+    }, 500);
   };
   
 
@@ -120,6 +132,7 @@ function App() {
       } else if (playerScore === dealerScore) {
         setBalance(balance + bet);
       }else if (playerScore > 21) {
+        setBalance(balance-bet)
       }
     }
   }, [gameOver]);
@@ -131,9 +144,10 @@ function App() {
     let newDeck = [...deck];
     let newDealerHand = [...dealerHand];
     let dealerScore = calculateScore(newDealerHand);
+    let playerScore = calculateScore(playerHand);
     setIsSoundCard(true)
     // Дилер берет только одну карту, если у него меньше 17 после двух карт
-    while (dealerScore < 17) { 
+    while (dealerScore<playerScore && dealerScore < 17) { 
         newDealerHand.push(newDeck.pop());
         setDealerHand([...newDealerHand]);
         setDeck(newDeck);
@@ -199,7 +213,20 @@ function App() {
             <button className={buttonClass} onClick={dealInitialCards}>
               {buttonText}
             </button>
-        </div>
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              transition={Bounce}
+              />        
+            </div>
       )}
       <div className="balance-wrapper">
         <p className="balance-text"> Balance: {balance}</p>

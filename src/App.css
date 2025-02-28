@@ -4,16 +4,6 @@
   position: relative; /* Фиксируем */
 
 }
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  
-  /* Фон с градиентом и анимацией глитч */
-  background: linear-gradient(90deg, #ff007f, #621250);
-  background-size: 400% 400%;
-  animation: glitchBackground 5s infinite linear alternate;
-}
 
 /* Глитч-анимация */
 @keyframes glitchBackground {
@@ -64,8 +54,8 @@ body, html {
 
 body, html {
   margin: 0;
+  overflow-x: hidden;
   padding: 0;
-  overflow: hidden;
   background-image: url("/public/images/dealer.jpg"); 
   background: linear-gradient(to bottom, #ff007f, #621250);
   background-size: contain; /* Заполняем экран, ширина может обрезаться */
@@ -88,7 +78,6 @@ body, html {
 .App{
   margin: 0;
   padding: 0;
-  overflow: hidden;
   background-image: url("/public/images/dealer.jpg"); 
   background-size: contain; /* Заполняем экран, ширина может обрезаться */
   background-position: center top; /* Центрируем картинку по горизонтали, выравниваем вверх */
@@ -139,10 +128,12 @@ body, html {
   object-fit: contain;
 }
 .header-container{
-  position: absolute;
+  position: fixed;
   width: 100vw;
   background-color: #000;
   height: 80px;
+  top: 0;
+  right: 0;
   margin-bottom: 0px;
   z-index: 10; /* Поверх всего */
 }
@@ -167,12 +158,11 @@ body, html {
   gap: 10px;
 }
 .background{
-  margin-top: 3%;
+  margin-top: 80px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
-  overflow: hidden;
   flex-direction: column;
   z-index: -1;
 }
@@ -235,8 +225,7 @@ body, html {
   color: white;
 }
 .balance-wrapper {
-  z-index: 99;
-  position: absolute;
+  position: fixed;
   top: 7%;
   right: 10%;
   padding: 8px 15px;
